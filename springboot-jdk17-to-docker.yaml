@@ -1,0 +1,38 @@
+---
+- name: Spring Boot Github repo to Docker Locally
+  hosts: localhost
+  become: yes
+  gather_facts: no
+
+# Symbols like ":" are not allowed in the name! 
+# Gathers variables needed in the playbook.   
+  vars_prompt:
+    - name: github_repo
+      prompt: Github repo url for the Spring Boot project 
+      private: no
+    - name: project_port
+      prompt: Enter the port to run the container on
+      private: no
+    - name: project_name
+      prompt: Enter the project name (Project will be created in the repos folder with this name)
+      private: no
+# Tasks in the playbook
+  tasks: 
+    - name: Install dependencies 
+      apt: 
+        name: openjdk-17-jdk
+        state: present
+
+    - name: Clone github repo
+      git: 
+        repo: "{{ github_repo }}"
+        dest: "~/repos/{{ project_name }}"
+        key_file: "/home/nelkov/.ssh/id_rsa"  
+        clone: yes
+        update: yes
+        
+
+
+
+
+
